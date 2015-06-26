@@ -43,7 +43,7 @@ namespace $safeprojectname$.Views
     {
         private QuarryInformation[] quarry = new QuarryInformation[3];
 		private const string Placeholder = "Enter your script token here ...";
-        private bool autostart = false;
+        public static bool autostart = false; //Is used without object reference
         private string autosavedirectory = "";
 
 		/// <summary>
@@ -62,7 +62,7 @@ namespace $safeprojectname$.Views
             InitializeComponent();
             Shown += MainWindow_Shown;
             ScriptTokenTextBox.Text = token;
-            this.autostart = autostart;
+            MainWindow.autostart = autostart;
             this.autosavedirectory = autosavedirectory;
         }
 
@@ -82,7 +82,10 @@ namespace $safeprojectname$.Views
                 String result = null;
                 foreach (QuarryInformation element in quarry)
                 {
-                    result = result + element.FormatedJsonString + Environment.NewLine;
+                    if(element != null)
+                    {
+                        result = result + element.FormatedJsonString + Environment.NewLine;
+                    }
                 }
                 resultTextBox.Text = result;
                 
@@ -91,7 +94,10 @@ namespace $safeprojectname$.Views
 			}
 			else
 			{
-                MessageBox.Show(Resources.Error_AccessTokenRequired);
+                if (!MainWindow.autostart)
+                {
+                    MessageBox.Show(Resources.Error_AccessTokenRequired);
+                }
 			}
 		}
 
@@ -146,7 +152,10 @@ namespace $safeprojectname$.Views
 			appInfo += @"Copyright:" + Tools.Tab + ApplicationInfo.AssemblyCopyright;
 			appInfo += Environment.NewLine;
 			appInfo += " " + Tools.Tab + Tools.Tab + ApplicationInfo.AssemblyCompany;
-            MessageBox.Show(appInfo, @"Application info");
+            if (!MainWindow.autostart)
+            {
+                MessageBox.Show(appInfo, @"Application info");
+            }
 		}
 
 		private void menuItemOnlineHelp_Click(object sender, EventArgs e)
@@ -162,7 +171,10 @@ namespace $safeprojectname$.Views
 			}
 			catch (Exception exception)
 			{
-				MessageBox.Show(exception.Message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (!MainWindow.autostart)
+                {
+                    MessageBox.Show(exception.Message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
 				Close();
 			}
 		}
@@ -181,27 +193,33 @@ namespace $safeprojectname$.Views
                 int fileNr = 1;
                 foreach (QuarryInformation element in quarry)
                 {
-                    string fileName = "TeamViewer_" + timestamp.GetTimestamp() + "_00" + fileNr++ + ".csv";
-                    string pathString = System.IO.Path.Combine(autosavedirectory, fileName);
-                    System.IO.FileStream fileStream = System.IO.File.Create(pathString);
-                    fileContent = jsonToCsv.getCsv(element.FormatedJsonString);
-                    var streamWriter = new System.IO.StreamWriter(fileStream, unicodeEncoding);
-                    try
+                    if (element != null)
                     {
-                        streamWriter.Write(fileContent);
-                        streamWriter.Flush();
-                        streamWriter.Close();
+                        string fileName = "TeamViewer_" + timestamp.GetTimestamp() + "_00" + fileNr++ + ".csv";
+                        string pathString = System.IO.Path.Combine(autosavedirectory, fileName);
+                        System.IO.FileStream fileStream = System.IO.File.Create(pathString);
+                        fileContent = jsonToCsv.getCsv(element.FormatedJsonString);
+                        var streamWriter = new System.IO.StreamWriter(fileStream, unicodeEncoding);
+                        try
+                        {
+                            streamWriter.Write(fileContent);
+                            streamWriter.Flush();
+                            streamWriter.Close();
+                        }
+                        finally
+                        {
+                            streamWriter.Dispose();
+                        }
+                        fileStream.Close();
+                        fileStream.Dispose();
                     }
-                    finally
-                    {
-                        streamWriter.Dispose();
-                    }
-                    fileStream.Close();
-                    fileStream.Dispose();
                 }
                 //TODO: Find a way to timeout the MessageBox
                 Close();
+                //if (!MainWindow.autostart)
+                //{
                 //MessageBox.Show("Files saved to: " + autosavedirectory);
+                //}
             }
         }
 
@@ -214,40 +232,46 @@ namespace $safeprojectname$.Views
             int fileNr = 1;
             foreach (QuarryInformation element in quarry)
             {
-                saveFileDialog.FileName = "TeamViewer_" + timestamp.GetTimestamp() + "_00" + fileNr++;
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                if (element != null)
                 {
-                    switch (saveFileDialog.FilterIndex)
+                    saveFileDialog.FileName = "TeamViewer_" + timestamp.GetTimestamp() + "_00" + fileNr++;
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
                     {
-                        case 2://CSV File
-                            //Converting output to CSV
-                            fileContent = jsonToCsv.getCsv(element.FormatedJsonString);
-                            break;
-                        case 1://Json File == default
-                        default://Output formated as Json
-                            fileContent = element.FormatedJsonString;
-                            break;
-                    }
-                    System.IO.Stream myStream;
-                    if ((myStream = saveFileDialog.OpenFile()) != null)
-                    {
-                        var streamWriter = new System.IO.StreamWriter(myStream, unicodeEncoding);
-                        try
+                        switch (saveFileDialog.FilterIndex)
                         {
-                            streamWriter.Write(fileContent);
-                            streamWriter.Flush();
-                            streamWriter.Close();
+                            case 2://CSV File
+                                //Converting output to CSV
+                                fileContent = jsonToCsv.getCsv(element.FormatedJsonString);
+                                break;
+                            case 1://Json File == default
+                            default://Output formated as Json
+                                fileContent = element.FormatedJsonString;
+                                break;
                         }
-                        finally
+                        System.IO.Stream myStream;
+                        if ((myStream = saveFileDialog.OpenFile()) != null)
                         {
-                            streamWriter.Dispose();
+                            var streamWriter = new System.IO.StreamWriter(myStream, unicodeEncoding);
+                            try
+                            {
+                                streamWriter.Write(fileContent);
+                                streamWriter.Flush();
+                                streamWriter.Close();
+                            }
+                            finally
+                            {
+                                streamWriter.Dispose();
+                            }
+                            myStream.Close();
+                            myStream.Dispose();
                         }
-                        myStream.Close();
-                        myStream.Dispose();
                     }
                 }
             }
-            MessageBox.Show("Files saved");
+            if (!MainWindow.autostart)
+            {
+                MessageBox.Show("Files saved");
+            }
         }
 	}
 }

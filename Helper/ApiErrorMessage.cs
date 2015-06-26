@@ -28,6 +28,7 @@ using System.Net;
 using System.Windows.Forms;
 using $safeprojectname$.DataType;
 using Newtonsoft.Json;
+using $safeprojectname$.Views;
 
 namespace $safeprojectname$.Helper
 {
@@ -42,7 +43,10 @@ namespace $safeprojectname$.Helper
 		/// <param name="message">Error message</param>
 		internal static void PrintError(string message)
 		{
-			MessageBox.Show(message, @"API Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (!MainWindow.autostart)
+            {
+                MessageBox.Show(message, @"API Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 		}
 
 		/// <summary>
@@ -71,8 +75,10 @@ Error code:	{2}",
 					errorMessage += string.Format("\nError signature:\t{0}\n", jsonError.ErrorSignature);
 				}
 			}
-
-			MessageBox.Show(errorMessage, @"API Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (!MainWindow.autostart)
+            {
+                MessageBox.Show(errorMessage, @"API Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 		}
 
 		/// <summary>
