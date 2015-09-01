@@ -48,13 +48,24 @@ namespace $safeprojectname$
             }
             else if (args.Length == 1)
             {
-                MessageBox.Show("Syntax: /token <TeamViewer-User-Token> /run /save <Save-Directory>");
+                MessageBox.Show("Syntax:" + Environment.NewLine +
+                                "/token <User-Token> \t Tocken from TeamViwer Management Console"+ Environment.NewLine +
+                                "/run \t\t\t Automatically click the quarry button" + Environment.NewLine +
+                                "/devices \t\t\t Automatically check the devices checkbox" + Environment.NewLine +
+                                "/account \t\t\t Automatically check the account checkbox" + Environment.NewLine +
+                                "/users \t\t\t Automatically check the users checkbox" + Environment.NewLine +
+                                "/groups \t\t\t Automatically check the groups checkbox" + Environment.NewLine +
+                                "/save <Save-Directory> \t Autosave to given directory");
             }
             else if (args.Length > 2)
             {
                 int i = 1;
                 string token = "";
                 bool autostart = false;
+                bool devices = false;
+                bool account = false;
+                bool users = false;
+                bool groups = false;
                 string autosavedirectory = "";
                 foreach (string s in args)
                 {
@@ -66,6 +77,18 @@ namespace $safeprojectname$
                         case "/run":
                             autostart = true;
                             break;
+                        case "/devices":
+                            devices = true;
+                            break;
+                        case "/account":
+                            account = true;
+                            break;
+                        case "/users":
+                            users = true;
+                            break;
+                        case "/groups":
+                            groups = true;
+                            break;
                         case "/save":
                             autosavedirectory = args[i];
                             break;
@@ -74,7 +97,7 @@ namespace $safeprojectname$
                     }
                     i++;
                 }
-                Application.Run(new MainWindow(token, autostart, autosavedirectory));
+                Application.Run(new MainWindow(token, autostart, autosavedirectory, devices, account, users, groups));
             }
         }
     }

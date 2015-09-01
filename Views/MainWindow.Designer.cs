@@ -39,6 +39,10 @@ namespace $safeprojectname$.Views
             this.ScriptTokenLabel = new System.Windows.Forms.Label();
             this.groupBoxAccessToken = new System.Windows.Forms.GroupBox();
             this.groupBoxSessionProperties = new System.Windows.Forms.GroupBox();
+            this.chb_Groups = new System.Windows.Forms.CheckBox();
+            this.chb_Users = new System.Windows.Forms.CheckBox();
+            this.chb_Account = new System.Windows.Forms.CheckBox();
+            this.chb_Devices = new System.Windows.Forms.CheckBox();
             this.groupBoxResult = new System.Windows.Forms.GroupBox();
             this.mainMenu = new System.Windows.Forms.MainMenu(this.components);
             this.menuItemApplication = new System.Windows.Forms.MenuItem();
@@ -68,7 +72,7 @@ namespace $safeprojectname$.Views
             this.getRequestedDataFromApi.Font = new System.Drawing.Font("Microsoft Sans Serif", 40F);
             this.getRequestedDataFromApi.Location = new System.Drawing.Point(6, 19);
             this.getRequestedDataFromApi.Name = "getRequestedDataFromApi";
-            this.getRequestedDataFromApi.Size = new System.Drawing.Size(431, 78);
+            this.getRequestedDataFromApi.Size = new System.Drawing.Size(431, 64);
             this.getRequestedDataFromApi.TabIndex = 4;
             this.getRequestedDataFromApi.Text = "Quarry request";
             this.getRequestedDataFromApi.UseVisualStyleBackColor = true;
@@ -117,6 +121,10 @@ namespace $safeprojectname$.Views
             // 
             // groupBoxSessionProperties
             // 
+            this.groupBoxSessionProperties.Controls.Add(this.chb_Groups);
+            this.groupBoxSessionProperties.Controls.Add(this.chb_Users);
+            this.groupBoxSessionProperties.Controls.Add(this.chb_Account);
+            this.groupBoxSessionProperties.Controls.Add(this.chb_Devices);
             this.groupBoxSessionProperties.Controls.Add(this.getRequestedDataFromApi);
             this.groupBoxSessionProperties.Location = new System.Drawing.Point(12, 74);
             this.groupBoxSessionProperties.Name = "groupBoxSessionProperties";
@@ -124,6 +132,52 @@ namespace $safeprojectname$.Views
             this.groupBoxSessionProperties.TabIndex = 22;
             this.groupBoxSessionProperties.TabStop = false;
             this.groupBoxSessionProperties.Text = "Session properties";
+            // 
+            // chb_Groups
+            // 
+            this.chb_Groups.AutoSize = true;
+            this.chb_Groups.Enabled = false;
+            this.chb_Groups.Location = new System.Drawing.Point(377, 86);
+            this.chb_Groups.Name = "chb_Groups";
+            this.chb_Groups.Size = new System.Drawing.Size(60, 17);
+            this.chb_Groups.TabIndex = 8;
+            this.chb_Groups.Text = "Groups";
+            this.chb_Groups.UseVisualStyleBackColor = true;
+            // 
+            // chb_Users
+            // 
+            this.chb_Users.AutoSize = true;
+            this.chb_Users.Enabled = false;
+            this.chb_Users.Location = new System.Drawing.Point(278, 86);
+            this.chb_Users.Name = "chb_Users";
+            this.chb_Users.Size = new System.Drawing.Size(53, 17);
+            this.chb_Users.TabIndex = 7;
+            this.chb_Users.Text = "Users";
+            this.chb_Users.UseVisualStyleBackColor = true;
+            // 
+            // chb_Account
+            // 
+            this.chb_Account.AutoSize = true;
+            this.chb_Account.Enabled = false;
+            this.chb_Account.Location = new System.Drawing.Point(130, 86);
+            this.chb_Account.Name = "chb_Account";
+            this.chb_Account.Size = new System.Drawing.Size(66, 17);
+            this.chb_Account.TabIndex = 6;
+            this.chb_Account.Text = "Account";
+            this.chb_Account.UseVisualStyleBackColor = true;
+            // 
+            // chb_Devices
+            // 
+            this.chb_Devices.AutoSize = true;
+            this.chb_Devices.Checked = true;
+            this.chb_Devices.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chb_Devices.Enabled = false;
+            this.chb_Devices.Location = new System.Drawing.Point(9, 86);
+            this.chb_Devices.Name = "chb_Devices";
+            this.chb_Devices.Size = new System.Drawing.Size(65, 17);
+            this.chb_Devices.TabIndex = 5;
+            this.chb_Devices.Text = "Devices";
+            this.chb_Devices.UseVisualStyleBackColor = true;
             // 
             // groupBoxResult
             // 
@@ -192,7 +246,7 @@ namespace $safeprojectname$.Views
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(467, 541);
+            this.ClientSize = new System.Drawing.Size(467, 530);
             this.Controls.Add(this.save_to_file);
             this.Controls.Add(this.groupBoxResult);
             this.Controls.Add(this.groupBoxSessionProperties);
@@ -207,6 +261,7 @@ namespace $safeprojectname$.Views
             this.groupBoxAccessToken.ResumeLayout(false);
             this.groupBoxAccessToken.PerformLayout();
             this.groupBoxSessionProperties.ResumeLayout(false);
+            this.groupBoxSessionProperties.PerformLayout();
             this.groupBoxResult.ResumeLayout(false);
             this.groupBoxResult.PerformLayout();
             this.ResumeLayout(false);
@@ -231,6 +286,10 @@ namespace $safeprojectname$.Views
         private System.Windows.Forms.MenuItem menuItemVisitWebsite;
         private System.Windows.Forms.Button save_to_file;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private System.Windows.Forms.CheckBox chb_Groups;
+        private System.Windows.Forms.CheckBox chb_Users;
+        private System.Windows.Forms.CheckBox chb_Account;
+        private System.Windows.Forms.CheckBox chb_Devices;
     }
 }
 

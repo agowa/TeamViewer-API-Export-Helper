@@ -41,7 +41,7 @@ namespace $safeprojectname$.Views
 	/// </summary>
 	internal partial class MainWindow : Form
     {
-        private QuarryInformation[] quarry = new QuarryInformation[3];
+        private QuarryInformation[] quarry = new QuarryInformation[4];
 		private const string Placeholder = "Enter your script token here ...";
         public static bool autostart = false; //Is used without object reference
         private string autosavedirectory = "";
@@ -57,13 +57,18 @@ namespace $safeprojectname$.Views
             ScriptTokenTextBox.Text = Placeholder;
             ScriptTokenTextBox.ForeColor = Color.LightGray;
 		}
-        internal MainWindow(string token, bool autostart, string autosavedirectory = "")
+        //Application.Run(new MainWindow(token, autostart, autosavedirectory, devices, account, users, groups));
+        internal MainWindow(string token, bool autostart, string autosavedirectory, bool devices, bool account, bool users, bool groups)
         {
             InitializeComponent();
             Shown += MainWindow_Shown;
             ScriptTokenTextBox.Text = token;
             MainWindow.autostart = autostart;
             this.autosavedirectory = autosavedirectory;
+            this.chb_Devices.Checked = devices;
+            this.chb_Account.Checked = account;
+            this.chb_Users.Checked = users;
+            this.chb_Groups.Checked = groups;
         }
 
 		/// <summary>
@@ -73,11 +78,25 @@ namespace $safeprojectname$.Views
 		/// <param name="e"></param>
         private void getRequestedDataFromApi_Click(object sender, EventArgs e)
 		{
+            resultTextBox.Clear();
 			if (ScriptTokenTextBox.Text != string.Empty)
 			{
-                ApiFunctions.QuarryDevices(TokenType.SkriptToken, ScriptTokenTextBox.Text, ref quarry[0]);
-                ApiFunctions.QuarryAccount(TokenType.SkriptToken, ScriptTokenTextBox.Text, ref quarry[1]);
-                ApiFunctions.QuarryUsers(TokenType.SkriptToken, ScriptTokenTextBox.Text, ref quarry[2]);
+                if (chb_Devices.Checked)
+                {
+                    ApiFunctions.QuarryDevices(TokenType.SkriptToken, ScriptTokenTextBox.Text, ref quarry[0]);
+                }
+                if (chb_Account.Checked)
+                {
+                    ApiFunctions.QuarryAccount(TokenType.SkriptToken, ScriptTokenTextBox.Text, ref quarry[1]);
+                }
+                if (chb_Users.Checked)
+                {
+                    ApiFunctions.QuarryUsers(TokenType.SkriptToken, ScriptTokenTextBox.Text, ref quarry[2]);
+                }
+                if (chb_Groups.Checked)
+                {
+                    ApiFunctions.QuarryGroups(TokenType.SkriptToken, ScriptTokenTextBox.Text, ref quarry[3]);
+                }
 
                 String result = null;
                 foreach (QuarryInformation element in quarry)
@@ -109,6 +128,10 @@ namespace $safeprojectname$.Views
 		private void ScriptTokenTextBox_TextChanged(object sender, EventArgs e)
 		{
 			getRequestedDataFromApi.Enabled = (ScriptTokenTextBox.Text != string.Empty && ScriptTokenTextBox.Text != Placeholder);
+            chb_Account.Enabled = (ScriptTokenTextBox.Text != string.Empty && ScriptTokenTextBox.Text != Placeholder);
+            chb_Devices.Enabled = (ScriptTokenTextBox.Text != string.Empty && ScriptTokenTextBox.Text != Placeholder);
+            chb_Groups.Enabled = (ScriptTokenTextBox.Text != string.Empty && ScriptTokenTextBox.Text != Placeholder);
+            chb_Users.Enabled = (ScriptTokenTextBox.Text != string.Empty && ScriptTokenTextBox.Text != Placeholder);
 		}
 
 		/// <summary>
@@ -185,41 +208,41 @@ namespace $safeprojectname$.Views
             if (autostart)
             {
                 getRequestedDataFromApi.PerformClick();
-            }
-            if (autosavedirectory != "")
-            {
-                System.Text.UnicodeEncoding unicodeEncoding = new System.Text.UnicodeEncoding();
-                string fileContent;
-                int fileNr = 1;
-                foreach (QuarryInformation element in quarry)
+                if (autosavedirectory != "")
                 {
-                    if (element != null)
+                    System.Text.UnicodeEncoding unicodeEncoding = new System.Text.UnicodeEncoding();
+                    string fileContent;
+                    int fileNr = 1;
+                    foreach (QuarryInformation element in quarry)
                     {
-                        string fileName = "TeamViewer_" + timestamp.GetTimestamp() + "_00" + fileNr++ + ".csv";
-                        string pathString = System.IO.Path.Combine(autosavedirectory, fileName);
-                        System.IO.FileStream fileStream = System.IO.File.Create(pathString);
-                        fileContent = jsonToCsv.getCsv(element.FormatedJsonString);
-                        var streamWriter = new System.IO.StreamWriter(fileStream, unicodeEncoding);
-                        try
+                        if (element != null)
                         {
-                            streamWriter.Write(fileContent);
-                            streamWriter.Flush();
-                            streamWriter.Close();
+                            string fileName = "TeamViewer_" + timestamp.GetTimestamp() + "_00" + fileNr++ + ".csv";
+                            string pathString = System.IO.Path.Combine(autosavedirectory, fileName);
+                            System.IO.FileStream fileStream = System.IO.File.Create(pathString);
+                            fileContent = jsonToCsv.getCsv(element.FormatedJsonString);
+                            var streamWriter = new System.IO.StreamWriter(fileStream, unicodeEncoding);
+                            try
+                            {
+                                streamWriter.Write(fileContent);
+                                streamWriter.Flush();
+                                streamWriter.Close();
+                            }
+                            finally
+                            {
+                                streamWriter.Dispose();
+                            }
+                            fileStream.Close();
+                            fileStream.Dispose();
                         }
-                        finally
-                        {
-                            streamWriter.Dispose();
-                        }
-                        fileStream.Close();
-                        fileStream.Dispose();
                     }
+                    //TODO: Find a way to timeout the MessageBox
+                    Close();
+                    //if (!MainWindow.autostart)
+                    //{
+                    //MessageBox.Show("Files saved to: " + autosavedirectory);
+                    //}
                 }
-                //TODO: Find a way to timeout the MessageBox
-                Close();
-                //if (!MainWindow.autostart)
-                //{
-                //MessageBox.Show("Files saved to: " + autosavedirectory);
-                //}
             }
         }
 

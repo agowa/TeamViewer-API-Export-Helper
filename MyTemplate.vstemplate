@@ -1,7 +1,7 @@
 <VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Project">
   <TemplateData>
     <Name>TeamViewer Exporter</Name>
-    <Description>&lt;Keine Beschreibung verfügbar&gt;</Description>
+    <Description>Enables you to export your TeamViewer Online Account. Based on TeamViewer from TeamViewer GmbH Example Codes</Description>
     <ProjectType>CSharp</ProjectType>
     <ProjectSubType>
     </ProjectSubType>

@@ -68,7 +68,17 @@ namespace $safeprojectname$.Helper
             CreateApiQuarry(tokenType, accessToken, ref instantSupportInfo, restProperties);
         }
 
-
+        internal static void QuarryGroups(TokenType tokenType, string accessToken, ref QuarryInformation instantSupportInfo)
+        {
+            var restProperties = new RestProperties
+            {
+                Url = TvApiUrls.UrlGetGroupIds,
+                Method = WebRequestMethods.Http.Get,
+                PostData = JsonConvert.SerializeObject(instantSupportInfo),
+                AccessToken = OAuth.ValidateToken(tokenType, accessToken)
+            };
+            CreateApiQuarry(tokenType, accessToken, ref instantSupportInfo, restProperties);
+        }
 
 
         private static void CreateApiQuarry(TokenType tokenType, string accessToken, ref QuarryInformation quarryInformation, RestProperties restProperties)
@@ -96,5 +106,5 @@ namespace $safeprojectname$.Helper
                 quarryInformation = null;
 			}
 		}
-	}
+    }
 }
