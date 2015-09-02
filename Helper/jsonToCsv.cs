@@ -40,11 +40,11 @@ namespace $safeprojectname$.Helper
             {
                 for (int i = 0; i < table.Columns.Count; i++)
                 {
-                    result.Append(row[i].ToString());
+                    result.Append(row[i].ToString().Replace("\r", "").Replace("\n", ""));
                     result.Append(i == table.Columns.Count - 1 ? "\n" : delimator);
                 }
             }
-            return result.ToString().Replace("\r\n", "").TrimEnd(new char[] { '\r', '\n' });
+            return result.ToString().TrimEnd(new char[] { '\r', '\n' });
         }
     }
 }
