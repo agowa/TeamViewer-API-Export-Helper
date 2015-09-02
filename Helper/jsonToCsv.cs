@@ -44,7 +44,7 @@ namespace $safeprojectname$.Helper
                     result.Append(i == table.Columns.Count - 1 ? "\n" : delimator);
                 }
             }
-            return result.ToString().TrimEnd(new char[] { '\r', '\n' });
+            return result.ToString().Replace("\r\n", "").TrimEnd(new char[] { '\r', '\n' });
         }
     }
 }

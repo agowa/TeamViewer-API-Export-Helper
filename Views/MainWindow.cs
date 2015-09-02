@@ -79,6 +79,10 @@ namespace $safeprojectname$.Views
         private void getRequestedDataFromApi_Click(object sender, EventArgs e)
 		{
             resultTextBox.Clear();
+            quarry[0] = null;
+            quarry[1] = null;
+            quarry[2] = null;
+            quarry[3] = null;
 			if (ScriptTokenTextBox.Text != string.Empty)
 			{
                 if (chb_Devices.Checked)
